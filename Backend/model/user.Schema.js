@@ -1,33 +1,46 @@
-const mongoose = require("mongoose")
-const { Schema } = mongoose
+const mongoose = require("mongoose");
+const { Schema } = mongoose;
 const userSchema = new Schema({
-    name: {
-        type: String,
-        required: [true, "Name is Required"],
-        minLength: [5, "Name must be at least 5 char"],
-        maxLength: [50, "Name must be less then 50 char"],
-        trim: true
-    },
-    email: {
-        type: String,
-        require: [true, "email is required"],
-        lowercase: true,
-        unique: [true, "email is already exist"]
+  name: {
+    type: String,
+    required: [true, "Name is Required"],
+    minLength: [5, "Name must be at least 5 char"],
+    maxLength: [50, "Name must be less then 50 char"],
+    trim: true,
+  },
+  email: {
+    type: String,
+    require: [true, "email is required"],
+    lowercase: true,
+    unique: [true, "email is already exist"],
+  },
+  password: {
+    type: String,
+    select: false, // this field will not show in response data
+  },
+  forgotPasswordToken: {
+    type: String,
+  },
+  forgotPasswordExpireTime: {
+    type: String,
+  },
+},{
+    timestamps:true,
 
-    },
-    password: {
-        type: String,
-        select: false // this field will not show in response data
-    },
-    forgotPasswordToken: {
-        type: String,
+});
+userSchema.method = {
+  jwtToken() {
+    return JWT.sign(
+      {
+        id: this._id,
+        email: this.email,
+      },
+      process.env.SECRET,
+      { expiresIn: "24h" }
+    );
+  },
+};
+// create model and export it to use wherever needed
 
-    },
-    forgotPasswordExpireTime: {
-        type: String
-    }
-
-})
-
-const userModel = mongoose.model("user", userSchema)
-module.exports = userModel
+const userModel = mongoose.model("user", userSchema);
+module.exports = userModel;

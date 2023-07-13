@@ -1,8 +1,8 @@
 
 const express = require("express")
-const { singup } = require("../controller/authcontroller")
+const { singup , signin } = require("../controller/authcontroller")
 const authrRouter = express.Router()
 authrRouter.post("/singup", singup)
-authrRouter.post("/singin", singin)
+authrRouter.post("/signin", signin)
 
 module.exports = authrRouter
