@@ -1,22 +1,28 @@
+// import module.................................
 
-const express = require("express")
-const authrRouter = require("./router/auth.rout.js")
-const dbconnect = require("./config/db.config.js")
-const cookieParser = require("cookie-parser")
-const app = express()
-dbconnect()
-app.use(express.json())
-app.use(cookieParser())
+const express = require("express");
+const authrRouter = require("./router/auth.rout.js");
+const dbconnect = require("./config/db.config.js");
+const cookieParser = require("cookie-parser");
+const cros = require("cors")
 
+const app = express();
+dbconnect();
+app.use(express.json());
+app.use(cookieParser());
+app.use(cros({
+    origin: [process.env.CLIENT_URL],
+    credentials: true // for cookies cross domain access
+}))
 
-app.use("/api/auth", authrRouter)
+app.use("/api/auth", authrRouter);
 
 app.use("/", (req, res) => {
-    res.status(200).json({
-        data: "JWTAuth Server"
-    })
-})
+  res.status(200).json({
+    data: "JWTAuth Server",
+  });
+});
 
+// .................. export it to use wherever needed
 
-
-module.exports = app
+module.exports = app;

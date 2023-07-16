@@ -1,6 +1,8 @@
+// import module.................................
 const userModel = require("../model/user.Schema");
 const emailValidator = require("deep-email-validator");
-
+const bcrypt = require("bcrypt");
+// singup.........................................
 const singup = async (req, res) => {
   const { name, email, password, confrimPassword } = req.body;
   console.log(name, email, password, confrimPassword);
@@ -47,7 +49,7 @@ const singup = async (req, res) => {
   }
 };
 
-// signin
+// signin.........................................
 
 const signin = async (req, res) => {
   const { email, password } = req.body;
@@ -69,16 +71,16 @@ const signin = async (req, res) => {
   try {
     const user = await userModel
       .findOne({
-        email
+        email,
       })
       .select("+password");
-    if (!user || password !== user.password) {
+    if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(400).json({
         success: false,
         message: "Invalid credentials",
       });
     }
-    const token = user.jwtToken;
+    const token = user.jwtToken();
     user.password = undefined;
     const cookieOptions = {
       maxAge: 24 * 60 * 60 * 1000,
@@ -87,7 +89,7 @@ const signin = async (req, res) => {
     res.cookie("token", token, cookieOptions);
     res.status(200).json({
       success: true,
-      data: user
+      data: user,
     });
   } catch (e) {
     return res.status(400).json({
@@ -96,8 +98,53 @@ const signin = async (req, res) => {
     });
   }
 };
+// user get.......................................
+const getUser = async (req, res) => {
+  const UserId = req.user.id;
+
+  try {
+    const user = await userModel.findById(UserId);
+    return res.status(200).json({
+      success: true,
+      data: user,
+    });
+  } catch (e) {
+    return res.status(400).json({
+      success: false,
+      message: e.message,
+    });
+  }
+};
+// logout.........................................
+
+const logout = (req, res) => {
+try{
+  const cookieOptions = {
+    expires : new Date(),
+    httpOnly : true
+
+  }
+  res.cookie("token" , null, cookieOptions)
+  return res.status(200).json({
+    success: true,
+    message: "Logout!"
+  })
+
+
+
+}catch(e){
+  return res.status(400).json({
+    success: false,
+    message: e.message,
+  });
+}
+};
+
+// .................. export it to use wherever needed
 
 module.exports = {
   singup,
-  signin
+  signin,
+  getUser,
+  logout,
 };
