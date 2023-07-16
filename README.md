@@ -2,15 +2,25 @@
 An authentication app is a software application that adds an extra layer of security to online accounts. It generates unique verification codes that users must enter along with their username and password during the login process. 
 ## Backend Dependencies
 **bcrypt:** A library used for hashing passwords securely.
+
 **cookie-parser:** Middleware for parsing cookies in Node.js.
+
 **cors:** Middleware that enables Cross-Origin Resource Sharing (CORS) in Express.
+
 **deep email validator:** A library for validating email addresses.
+
 **dotenv:** Loads environment variables from a .env file.
+
 **express:** A web application framework for Node.js.
+
 **jsonwebtoken:** A library for generating and verifying JSON Web Tokens (JWT).
+
 **mongoose:** An Object Data Modeling (ODM) library for MongoDB and Node.js.
+
 **Nodejs:** The core JavaScript runtime used for building server-side applications.
+
 **nodemon:** A development tool automatically restarts the Node.js server when file changes are detected.
+
 
 ## Getting Started
 To run the authentication app locally, follow these steps:
