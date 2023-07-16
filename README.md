@@ -26,12 +26,19 @@ An authentication app is a software application that adds an extra layer of secu
 To run the authentication app locally, follow these steps:
 
 **Clone the repository:** git clone <repository-url>
+
 **Navigate to the project directory:** cd authentication-app
+
 **Install backend dependencies:** npm install
+
 **Create a .env** file in the project root and configure environment variables.
+
 **Start the backend server:** npm run dev
+
 **In a separate terminal,** start the server:  npm start
+
 Access the application at http://localhost:3000.
+
 
 ## Configuration
 The app utilizes environment variables for configuration. Create a .env file in the project root and add the following variables:
