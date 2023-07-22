@@ -20,6 +20,12 @@ const userSchema = new Schema(
       lowercase: true,
       unique: [true, "email is already exist"],
     },
+    bio : {
+      type:String,
+      required:true,
+      minLength: [10, "Name must be at least 5 char"],
+      maxLength: [150, "Name must be less then 50 char"],
+  },
     password: {
       type: String,
       select: false, // this field will not show in response data
@@ -58,7 +64,22 @@ userSchema.methods = {
       { expiresIn: "24h" }
     );
   },
+
+// ............................................................
+getForgotPasswordToken(){
+  const forgotToken = crypto.randomBytes(20).toString("hex");
+  this.forgotPasswordToken = crypto
+  .createHash("sha256")
+  .update(forgotToken)
+  .digest("hex");
+  //forgot password expiryDate
+  this.forgotPasswordExpireTime = Date.now() +20*60*1000//20min
+   return ('Forgot Password Token:',forgotToken )
+}
+
 };
+
+
 // .................. export it to use wherever needed
 
 const userModel = mongoose.model("user", userSchema);

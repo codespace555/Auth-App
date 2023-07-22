@@ -4,10 +4,10 @@ const emailValidator = require("deep-email-validator");
 const bcrypt = require("bcrypt");
 // singup.........................................
 const singup = async (req, res) => {
-  const { name, email, password, confrimPassword } = req.body;
-  console.log(name, email, password, confrimPassword);
+  const { name, email, password, confrimPassword,bio } = req.body;
+  console.log(name, email, password, confrimPassword,bio);
   try {
-    if (!name || !email || !password || !confrimPassword) {
+    if (!name || !email || !password || !confrimPassword || !bio ) {
       return res.status(400).json({
         success: false,
         message: "Ever Field is required",
@@ -28,7 +28,7 @@ const singup = async (req, res) => {
         message: "Password & confrim password don't match",
       });
     }
-
+    // ...................................................
     const userInfo = userModel(req.body);
     const result = await userInfo.save();
     return res.status(200).json({
@@ -115,29 +115,122 @@ const getUser = async (req, res) => {
     });
   }
 };
-// logout.........................................
-
-const logout = (req, res) => {
-try{
-  const cookieOptions = {
-    expires : new Date(),
-    httpOnly : true
+// fogotPassword............................
+const fogotPassword = async (req, res) => {
+  const email = req.body.email
+  if (!email) {
+    return res.status(400).json({
+      success: false,
+      message: "Email is required",
+    });
 
   }
-  res.cookie("token" , null, cookieOptions)
-  return res.status(200).json({
-    success: true,
-    message: "Logout!"
-  })
+  try {
+    const user = await userModel.findOne({
+      email
+    })
 
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "user not exist",
+      });
+    }
 
+    const forgotPasswordToken = user.getForgotPasswordToken()
+    await user.save()
+    return res.status(200).json({
+      success: true,
+      token: forgotPasswordToken,
+    });
+
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}
+
+// reset password.....................
+const resetPassword = async (req, res, next) => {
+  const { token } = req.params
+  const { password, confrimPassword } = req.body
+
+  if (!password || !confrimPassword) {
+    return res.status(400).json({
+      success: false,
+      message: "password and confrimpassword is required"
+
+    })
+  }
+  const hashToken =
+    crypto.createHash("sh256").update(token).digest("hex")
+  try {
+    const user = await  userModel.findOne({
+      forgotPasswordToken:hashToken,
+      forgotPasswordExpireTime:{
+        $gt :new Date()
+      }
+    })
+
+    if(!user){
+      return res.status(400).json({
+        success: false,
+        message: "invalid Token or token is expired",
+      });
+    }
+    // check the passwords match
+user.password = password
+await user.save()
+user.forgotPasswordExpireTime = undefined
+user.forgotPasswordToken = undefined
+user.password= undefined
+
+return res.status(200).json({
+  success:true,
+  data:user
+})
 
 }catch(e){
   return res.status(400).json({
     success: false,
-    message: e.message,
-  });
+    message: e.message
+
+  })
 }
+
+
+}
+
+
+
+
+
+
+// logout.........................................
+
+const logout = (req, res) => {
+  try {
+    const cookieOptions = {
+      expires: new Date(),
+      httpOnly: true
+
+    }
+    res.cookie("token", null, cookieOptions)
+    return res.status(200).json({
+      success: true,
+      message: "Logout!"
+    })
+
+
+
+  } catch (e) {
+    return res.status(400).json({
+      success: false,
+      message: e.message,
+    });
+  }
 };
 
 // .................. export it to use wherever needed
