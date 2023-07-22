@@ -2,6 +2,7 @@
 
 const express = require("express");
 const authrRouter = require("./router/auth.rout.js");
+require("dotenv").config();
 const dbconnect = require("./config/db.config.js");
 const cookieParser = require("cookie-parser");
 const cros = require("cors")
