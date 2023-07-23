@@ -6,7 +6,7 @@ const jwtAuth = (req, res, next) => {
   // verify token
   const token = (req.cookies && req.cookies.token) || null;
   if (!token) {
-    return res.status(400).json({
+    return res.status(400).send({
       success: false,
       message: "Unauthorized",
     });
@@ -18,7 +18,7 @@ const jwtAuth = (req, res, next) => {
       email: payload.email,
     };
   } catch (error) {
-    return res.status(400).json({
+    return res.status(400).send({
       success: false,
       message: e.message,
     });

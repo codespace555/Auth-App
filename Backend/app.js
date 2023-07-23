@@ -15,11 +15,12 @@ app.use(cros({
     origin: [process.env.CLIENT_URL],
     credentials: true // for cookies cross domain access
 }))
+// console.log(CLIENT_URL,PORT)
 
 app.use("/api/auth", authrRouter);
 
 app.use("/", (req, res) => {
-  res.status(200).json({
+  res.status(200).send({
     data: "JWTAuth Server",
   });
 });
