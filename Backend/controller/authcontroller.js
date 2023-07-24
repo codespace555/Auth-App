@@ -9,7 +9,7 @@ const singup = async (req, res) => {
   console.log(name, email, password, confrimPassword,bio);
   try {
     if (!name || !email || !password || !confrimPassword || !bio ) {
-      return res.status(400).json({
+      return res.status(400).send({
         success: false,
         message: "Ever Field is required",
       });
@@ -219,7 +219,7 @@ const logout = (req, res) => {
 
     }
     res.cookie("token", null, cookieOptions)
-    return res.status(200).json({
+    return res.status(200).send({
       success: true,
       message: "Logout!"
     })
@@ -227,7 +227,7 @@ const logout = (req, res) => {
 
 
   } catch (e) {
-    return res.status(400).json({
+    return res.status(400).send({
       success: false,
       message: e.message,
     });

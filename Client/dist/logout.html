@@ -1,0 +1,29 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="output.css">
+    <title>Logout | MyApp</title>
+</head>
+<body>
+    <h1 class="flex justify-between  w-full h-16  p-5 text-8xl ">Thank You For Visit My App</h1>
+</body>
+<Script>
+    const userData = async () => {
+    try {
+      const resp = await fetch("http://localhost:8001/api/auth/logout", {
+        method: "GET",
+        credentials: "include"
+      });
+      if (resp.status !== 200) { window.location.href = "http://localhost:5500/Client/dist/logout.html" }
+      
+      
+
+    } catch (error) {
+      console.log(error.message)
+      window.location.href = "http://localhost:5500/Client/dist/login.html"
+    }
+  }
+</Script>
+</html> -->

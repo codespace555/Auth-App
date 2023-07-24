@@ -23,8 +23,8 @@ const userSchema = new Schema(
     bio : {
       type:String,
       required:true,
-      minLength: [10, "Name must be at least 5 char"],
-      maxLength: [150, "Name must be less then 50 char"],
+      minLength: [1, "Name must be at least 5 char"],
+      maxLength: [550, "Name must be less then 50 char"],
   },
     password: {
       type: String,
